@@ -1,0 +1,85 @@
+{
+  "login": [
+    {
+      "name": "amit",
+      "password": "Letmein10"
+    }
+  ],
+  "users": [
+    {
+      "name": "ruchi",
+      "username": "ruchi",
+      "email": "ruchi@troyconsultancy.ie",
+      "phone": "0989087",
+      "website": "www.ruchi.com",
+      "id": 1
+    },
+    {
+      "name": "rohit",
+      "username": "kumari",
+      "password": "ruchi",
+      "email": "ruchi@troyconsultancy.ie",
+      "phone": "0989087",
+      "website": "www.ruchi.com",
+      "id": 3
+    },
+    {
+      "name": "noooo",
+      "username": "noo",
+      "password": "ruchi",
+      "email": "ruchi@gmail.com",
+      "phone": "0989087",
+      "website": "www.ruchi.com",
+      "id": 4
+    },
+    {
+      "name": "tiya ",
+      "username": "negi",
+      "password": "ruchi",
+      "email": "tiya@gmail.com",
+      "phone": "0984567",
+      "website": "ruchi.com",
+      "id": 7
+    },
+    {
+      "name": "ruchi",
+      "username": "ruchi",
+      "email": "ruchi@troyconsultancy.ie",
+      "phone": "0989087",
+      "website": "www.ruchi.com",
+      "id": 8
+    },
+    {
+      "name": "tiya",
+      "username": "ruchi",
+      "email": "tiya@gmail.com",
+      "phone": "0984567",
+      "website": "ruchi.com",
+      "id": 9
+    },
+    {
+      "name": "tiya",
+      "username": "kumari",
+      "email": "piya@gmail.com",
+      "phone": "0984567",
+      "website": "www.ruchi.com",
+      "id": 10
+    },
+    {
+      "name": "ruchi",
+      "username": "ruchi",
+      "email": "ruchi@troyconsultancy.ie",
+      "phone": "0989087",
+      "website": "ruchi.com",
+      "id": 11
+    },
+    {
+      "name": "ruchi",
+      "username": "ruchi234",
+      "email": "ruchi@troyconsultancy.ie",
+      "phone": "0989087",
+      "website": "www.ruchi.com",
+      "id": 12
+    }
+  ]
+}
