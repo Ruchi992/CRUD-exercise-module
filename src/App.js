@@ -4,7 +4,7 @@ import "../node_modules/bootstrap/dist/css/bootstrap.css";
 
 import Home from "./pages/Home";
 import Contact from "./pages/containers/Contact";
-import NavBarManu from "./pages/layout/NavBarManu";
+// import NavBarManu from "./pages/layout/NavBarManu";
 import {
   BrowserRouter as Router,
   Route,
@@ -24,8 +24,7 @@ import Logout from "./pages/Logout";
 function App(props) {
   return (
     <Router>
-      <div className="App">
-        <NavBarManu />        
+      <div className="App">             
 
         <Switch>    
         <Route exact path="/" component={Home}  />
