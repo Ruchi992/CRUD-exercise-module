@@ -1,87 +1,156 @@
-import React from 'react'
-import { Formik, Form, Field } from 'formik'
-import * as Yup from 'yup'
+import { Field, useFormik } from "formik";
+import React, { useContext, useState } from "react";
+import { Marginer } from "../pages/marginer";
+import {
+  BoldLink,
+  BoxContainer,
+  FieldContainer,
+  FieldError,
+  FormContainer,
+  FormSuccess,
+  Input,
+  MutedLink,
+  SubmitButton,
+  FormError,
+} from "../pages/Common";
+import { UserContext } from "../pages/context";
+import * as yup from "yup";
+import axios from "axios";
 
+const PASSWORD_REGEX = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
 
-function signup () {
-  const options = [
-    { key: 'Email', value: 'emailmoc' },
-    { key: 'Telephone', value: 'telephonemoc' }
-  ]
-  const initialValues = {
-    email: '',
-    password: '',
-    confirmPassword: '',
-    modeOfContact: '',
-    phone: ''
-  }
+const validationSchema = yup.object({
+  fullName: yup
+    .string()
+    .min(3, "Please enter you real name")
+    .required("Full name is required!"),
+  email: yup.string().email("Please enter a valid email address").required(),
+  password: yup
+    .string()
+    .matches(PASSWORD_REGEX, "Please enter a strong password")
+    .required(),
+  confirmPassword: yup
+    .string()
+    .required("Please confirm your password")
+    .when("password", {
+      is: (val) => (val && val.length > 0 ? true : false),
+      then: yup
+        .string()
+        .oneOf([yup.ref("password")], "Password does not match"),
+    }),
+});
 
-  const validationSchema = Yup.object({
-    email: Yup.string()
-      .email('Invalid email format')
-      .required('Required'),
-    password: Yup.string().required('Required'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), ''], 'Passwords must match')
-      .required('Required'),
-    modeOfContact: Yup.string().required('Required'),
-    phone: Yup.string().when('modeOfContact', {
-      is: 'telephonemoc',
-      then: Yup.string().required('Required')
-    })
-  })
+export function SignupForm(props) {
+  const { switchToSignin } = useContext(UserContext);
+  const [success, setSuccess] = useState(null);
+  const [error, setError] = useState(null);
 
-  const onSubmit = values => {
-    console.log('Form data', values)
-  }
+  const onSubmit = async (values) => {
+    const { confirmPassword, ...data } = values;
+
+    const response = await axios
+      .post("http://localhost:3001/register", data)
+      .catch((err) => {
+        if (err && err.response) setError(err.response.data.message);
+        setSuccess(null);
+      });
+
+    if (response && response.data) {
+      setError(null);
+      setSuccess(response.data.message);
+      formik.resetForm();
+    }
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      fullName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validateOnBlur: true,
+    onSubmit,
+    validationSchema: validationSchema,
+  });
+
+  console.log("Error", error);
 
   return (
-    <Formik
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      onSubmit={onSubmit}
-    >
-      {formik => {
-        return (
-          <Form>
-            <Field
-              control='input'
-              type='email'
-              label='Email'
-              name='email'
-            />
-            <Field
-              control='input'
-              type='password'
-              label='Password'
-              name='password'
-            />
-            <Field
-              control='input'
-              type='password'
-              label='Confirm Password'
-              name='confirmPassword'
-            />
-            <Field
-              control='radio'
-              label='Mode of contact'
-              name='modeOfContact'
-              options={options}
-            />
-            <Field
-              control='input'
-              type='text'
-              label='Phone number'
-              name='phone'
-            />
-            <button type='submit' disabled={!formik.isValid}>
-              Submit
-            </button>
-          </Form>
-        )
-      }}
-    </Formik>
-  )
+    <BoxContainer>
+      {!error && <FormSuccess>{success ? success : ""}</FormSuccess>}
+      {!success && <FormError>{error ? error : ""}</FormError>}
+      <FormContainer onSubmit={formik.handleSubmit}>
+        <FieldContainer>
+          <Input
+            name="fullName"
+            placeholder="Full Name"
+            value={formik.values.fullName}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <FieldError>
+            {formik.touched.fullName && formik.errors.fullName
+              ? formik.errors.fullName
+              : ""}
+          </FieldError>
+        </FieldContainer>
+        <FieldContainer>
+          <Input
+            name="email"
+            placeholder="Email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <FieldError>
+            {formik.touched.email && formik.errors.email
+              ? formik.errors.email
+              : ""}
+          </FieldError>
+        </FieldContainer>
+        <FieldContainer>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <FieldError>
+            {formik.touched.password && formik.errors.password
+              ? formik.errors.password
+              : ""}
+          </FieldError>
+        </FieldContainer>
+        <FieldContainer>
+          <Input
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            value={formik.values.confirmPassword}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          <FieldError>
+            {formik.touched.confirmPassword && formik.errors.confirmPassword
+              ? formik.errors.confirmPassword
+              : ""}
+          </FieldError>
+        </FieldContainer>
+        <Marginer direction="vertical" margin="1em" />
+        <SubmitButton type="submit" disabled={!formik.isValid}>
+          Signup
+        </SubmitButton>
+      </FormContainer>
+      <Marginer direction="vertical" margin={5} />
+      <MutedLink href="#">
+        Already have an account?
+        <BoldLink href="#" onClick={switchToSignin}>
+          sign in
+        </BoldLink>
+      </MutedLink>
+    </BoxContainer>
+  );
 }
-
-export default signup;

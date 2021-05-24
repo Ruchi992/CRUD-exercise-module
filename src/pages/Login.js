@@ -1,53 +1,101 @@
-import React, { useState, Component } from "react";
-import axios from 'axios'
+import { Field, useFormik } from "formik";
+import React, { useContext, useState } from "react";
+import { Marginer } from "../pages/marginer";
+import {
+  BoldLink,
+  BoxContainer,
+  FieldContainer,
+  FieldError,
+  FormContainer,
+  FormError,
+  Input,
+  MutedLink,
+  SubmitButton,
+} from "../pages/Common";
+import { UserContext } from "../pages/context";
+import * as yup from "yup";
+import axios from "axios";
 
-import { useHistory } from "react-router-dom";
+const validationSchema = yup.object({
+  email: yup.string().required(),
+  password: yup.string().required(),
+});
 
- class Login extends Component {
-   constructor()
-   {
-     super();
-     this.state={
-       name:'',
-       password:''
+export function Login(props) {
+  const { switchToSignup } = useContext(UserContext);
+  const [error, setError] = useState(null);
 
-     }
-   }
-   login()
-   {
-     console.warn(this.state)
-     fetch("http://localhost:3001/login?q=" + this.state.name).then((data)=>{
-          data.json().then((resp)=>{
-            console.warn("resp", JSON.stringify(resp))
-            if(resp.length>=0)
-            {
-              localStorage.setItem('login', resp)
-              console.warn(this.props.history.push('Items'))
+  const onSubmit = async (values) => {
+    setError(null);
+    const response = await axios
+      .post("http://localhost:3001/login", values)
+      .catch((err) => {
+        if (err && err.response) setError(err.response.data.message);
+      });
 
-            }
-            else{
-              alert("please check username and password")
-            }
+    if (response) {
+      alert("Welcome back in. Authenticating...");
+    }
+  };
 
-          })  
-            
-          
-     })
-   }
-   render() {
-return(
-  <div>
-    <input type="text" 
-    placeholder="enter name"
-      name="user" onChange={(event)=> this.setState({name:event.target.value})}/>
-    <br/> <br/>
-    <input type="password" 
-    placeholder="enter password"
-    name="password" onChange={(event)=>this.setState({password:event.target.value})} />
-    <br/> <br/>
-    <button onClick={()=>{this.login()}}>Login</button>
-  </div>
-)
-   }
- };
- export default Login;
+  const formik = useFormik({
+    initialValues: { email: "", password: "" },
+    validateOnBlur: true,
+    onSubmit,
+    validationSchema: validationSchema,
+  });
+
+  return (
+    <BoxContainer>
+      <FormError>{error ? error : ""}</FormError>
+      <FormContainer onSubmit={formik.handleSubmit}>
+        <FieldContainer>
+          <Input
+            name="email"
+            placeholder="Email"
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {
+            <FieldError>
+              {formik.touched.email && formik.errors.email
+                ? formik.errors.email
+                : ""}
+            </FieldError>
+          }
+        </FieldContainer>
+        <FieldContainer>
+          <Input
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {
+            <FieldError>
+              {formik.touched.password && formik.errors.password
+                ? formik.errors.password
+                : ""}
+            </FieldError>
+          }
+        </FieldContainer>
+        <MutedLink href="#">Forgot Password?</MutedLink>
+        <Marginer direction="vertical" margin="1em" />
+        <SubmitButton type="submit" disabled={!formik.isValid}>
+          Login
+        </SubmitButton>
+      </FormContainer>
+      <Marginer direction="vertical" margin={5} />
+      <MutedLink href="#">
+        Dont have an Account?
+        <BoldLink href="#" onClick={switchToSignup}>
+          sign up
+        </BoldLink>
+      </MutedLink>
+    </BoxContainer>
+  );
+}
+export default Login;
