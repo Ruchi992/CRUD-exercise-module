@@ -18,15 +18,15 @@ class NavBarManu extends Component {
                                 <FontAwesomeIcon icon={faHome} /> Home</Link></Nav.Link>
                                 <Nav.Link href="#link"><Link to="/Items">
                                 <FontAwesomeIcon icon={faList} /> ListingUsers </Link></Nav.Link>
-                                <Nav.Link href="#link"><Link to="/contact">
-                                <FontAwesomeIcon icon={faPhone} /> contact</Link></Nav.Link>
+                                
+                        
                                 {
-                                    localStorage.getItem('login') ?
+                                    localStorage.getItem('SignInOutContainer') ?
                                     <Nav.Link href="#link"><Link to="/logout">
                                 <FontAwesomeIcon icon={faUser} /> Logout</Link></Nav.Link>
                                     :
-                                    <Nav.Link href="#link"><Link to="/login">
-                                <FontAwesomeIcon icon={faUser} /> Login</Link></Nav.Link>
+                                    <Nav.Link href="#link"><Link to="/SignInOutContainer">
+                                <FontAwesomeIcon icon={faUser} /> SignInOutContainer</Link></Nav.Link>
                                 }
                                 
                                 

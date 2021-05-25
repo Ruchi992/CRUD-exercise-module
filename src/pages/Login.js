@@ -1,101 +1,52 @@
-import { Field, useFormik } from "formik";
-import React, { useContext, useState } from "react";
-import { Marginer } from "../pages/marginer";
-import {
-  BoldLink,
-  BoxContainer,
-  FieldContainer,
-  FieldError,
-  FormContainer,
-  FormError,
-  Input,
-  MutedLink,
-  SubmitButton,
-} from "../pages/Common";
-import { UserContext } from "../pages/context";
-import * as yup from "yup";
-import axios from "axios";
+import React from 'react'
+import { Grid,Paper, Avatar, TextField, Button, Typography,Link } from '@material-ui/core'
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+const Login=({handleChange})=>{
 
-const validationSchema = yup.object({
-  email: yup.string().required(),
-  password: yup.string().required(),
-});
-
-export function Login(props) {
-  const { switchToSignup } = useContext(UserContext);
-  const [error, setError] = useState(null);
-
-  const onSubmit = async (values) => {
-    setError(null);
-    const response = await axios
-      .post("http://localhost:3001/login", values)
-      .catch((err) => {
-        if (err && err.response) setError(err.response.data.message);
-      });
-
-    if (response) {
-      alert("Welcome back in. Authenticating...");
+    const paperStyle={padding :20,height:'73vh',width:300, margin:"0 auto"}
+    const avatarStyle={backgroundColor:'#1bbd7e'}
+    const btnstyle={margin:'8px 0'}
+    
+    const initialValues = {
+        name: '',
+        email: '',
+        phoneNumber: '',
+        password: ''
     }
-  };
-
-  const formik = useFormik({
-    initialValues: { email: "", password: "" },
-    validateOnBlur: true,
-    onSubmit,
-    validationSchema: validationSchema,
-  });
-
-  return (
-    <BoxContainer>
-      <FormError>{error ? error : ""}</FormError>
-      <FormContainer onSubmit={formik.handleSubmit}>
-        <FieldContainer>
-          <Input
-            name="email"
-            placeholder="Email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {
-            <FieldError>
-              {formik.touched.email && formik.errors.email
-                ? formik.errors.email
-                : ""}
-            </FieldError>
-          }
-        </FieldContainer>
-        <FieldContainer>
-          <Input
-            name="password"
-            type="password"
-            placeholder="Password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-          />
-          {
-            <FieldError>
-              {formik.touched.password && formik.errors.password
-                ? formik.errors.password
-                : ""}
-            </FieldError>
-          }
-        </FieldContainer>
-        <MutedLink href="#">Forgot Password?</MutedLink>
-        <Marginer direction="vertical" margin="1em" />
-        <SubmitButton type="submit" disabled={!formik.isValid}>
-          Login
-        </SubmitButton>
-      </FormContainer>
-      <Marginer direction="vertical" margin={5} />
-      <MutedLink href="#">
-        Dont have an Account?
-        <BoldLink href="#" onClick={switchToSignup}>
-          sign up
-        </BoldLink>
-      </MutedLink>
-    </BoxContainer>
-  );
+    return(
+        <Grid>
+            <Paper  style={paperStyle}>
+                <Grid align='center'>
+                     <Avatar style={avatarStyle}><LockOutlinedIcon/></Avatar>
+                    <h2>Sign In</h2>
+                </Grid>
+                <TextField label='Username' placeholder='Enter username' fullWidth required/>
+                <TextField label='Password' placeholder='Enter password' type='password' fullWidth required/>
+                <FormControlLabel
+                    control={
+                    <Checkbox
+                        name="checkedB"
+                        color="primary"
+                    />
+                    }
+                    label="Remember me"
+                 />
+                <Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth>Sign in</Button>
+                <Typography >
+                     <Link href="#" >
+                        Forgot password ?
+                </Link>
+                </Typography>
+                <Typography > Do you have an account ?
+                     <Link href="#" onClick={()=>handleChange("event",1)} >
+                        Sign Up 
+                </Link>
+                </Typography>
+            </Paper>
+        </Grid>
+    )
 }
+
 export default Login;

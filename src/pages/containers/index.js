@@ -5,7 +5,8 @@ import Tab from '@material-ui/core/Tab';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import Login from '../Login'
-import Signup from '../signup' 
+import Signup from '../SignupForm' 
+
 const SignInOutContainer=()=>{
 const [value,setValue]=useState(0)
 const handleChange = (event, newValue) => {
